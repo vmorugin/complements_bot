@@ -21,7 +21,7 @@ def _setup_complement_handlers(repo: ComplementsJsonRepo):
 
 def run():
     _setup_bot()
-    loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
     loop.create_task(bot.infinity_polling())
     loop.run_forever()
 

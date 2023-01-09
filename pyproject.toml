@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "complements-bot"
+version = "0.1.0"
+description = ""
+authors = ["shalom-babka <ikeadfghj@gmail.com>"]
+readme = "README.md"
+packages = []
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pytelegrambotapi = "^4.9.0"
+aiohttp = "^3.8.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
