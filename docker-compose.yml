@@ -1,0 +1,10 @@
+version: "3"
+
+
+services:
+  bot:
+    environment:
+      - TELEBOT_TOKEN
+    build: .
+    ports:
+      - "8000:8000"
