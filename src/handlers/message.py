@@ -1,6 +1,6 @@
 from telebot.types import Message
 
-from src.bot import bot
+from bot import bot
 from repository.abstractions import AbstractComplementRepo
 
 
