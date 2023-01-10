@@ -2,6 +2,7 @@ import asyncio
 from bot import bot
 from bot.middelwares import CallbackMiddleware
 from domains.games.guess_the_number import GuessTheNumberHandler
+from domains.games.model import Score
 from repository.json_repo import JsonRepo
 from handlers.message import MessageHandler
 from settings import JSON_DB_PATH
@@ -25,7 +26,8 @@ def _setup_handlers(repo: JsonRepo):
 
 
 def _setup_game_callbacks():
-    handler = GuessTheNumberHandler(bot)
+    score = Score
+    handler = GuessTheNumberHandler(bot, score=score)
     bot.callback_query_handler(handler.filter)(handler.callback)
 
 
