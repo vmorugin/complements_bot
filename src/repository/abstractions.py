@@ -3,6 +3,7 @@ import typing as t
 import json
 
 from domains.complements.model import Complement
+from domains.games.model import Game
 
 
 class AbstractJsonRepo(abc.ABC):
@@ -28,4 +29,11 @@ class AbstractComplementRepo(abc.ABC):
 
     @abc.abstractmethod
     def get_random_complement(self) -> Complement:
+        ...
+
+
+class AbstractGameRepo(abc.ABC):
+
+    @abc.abstractmethod
+    def get_games_list(self) -> list[Game]:
         ...

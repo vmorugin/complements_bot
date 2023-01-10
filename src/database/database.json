@@ -40,5 +40,12 @@
       "text": "Смотришь на меня воть так",
       "pic": "https://storage.vsemayki.ru/images/0/2/2940/2940993/previews/people_7_postcard_a6_front_white_250.jpg"
     }
+  ],
+  "games": [
+    {
+      "id": 1,
+      "title": "Угадай число",
+      "name": "GuessTheNumber"
+    }
   ]
 }
