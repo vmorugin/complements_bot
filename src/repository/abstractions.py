@@ -3,7 +3,7 @@ import typing as t
 import json
 
 from domains.complements.model import Complement
-from domains.games.model import Game
+from domains.games.abstractions import GameABC
 
 
 class AbstractJsonRepo(abc.ABC):
@@ -35,5 +35,9 @@ class AbstractComplementRepo(abc.ABC):
 class AbstractGameRepo(abc.ABC):
 
     @abc.abstractmethod
-    def get_games_list(self) -> list[Game]:
+    def get_games(self) -> list[GameABC]:
+        ...
+
+    @abc.abstractmethod
+    def get_game(self, name: str) -> GameABC:
         ...

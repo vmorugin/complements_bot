@@ -19,7 +19,7 @@ class MessageHandler:
         return await self.bot.send_message(message.chat.id, text=complement.text)
 
     async def play_game(self, message: Message):
-        games = self.repo.get_games_list()
+        games = self.repo.get_games()
         keyboard = []
         for game in games:
             callback_data = json.dumps({"name": game.name})
