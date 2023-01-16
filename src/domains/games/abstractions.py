@@ -2,26 +2,7 @@ import abc
 import typing as t
 
 from telebot.async_telebot import AsyncTeleBot
-from telebot.types import CallbackQuery, InlineKeyboardMarkup, Message
-
-
-class ScoreABC(abc.ABC):
-
-    @abc.abstractmethod
-    def get(self, key) -> int:
-        ...
-
-    @abc.abstractmethod
-    def increase(self, key):
-        ...
-
-    @abc.abstractmethod
-    def pop_key(self, key) -> int:
-        ...
-
-    @abc.abstractmethod
-    def clear_all(self):
-        ...
+from telebot.types import CallbackQuery, InlineKeyboardMarkup
 
 
 class GameMeta(abc.ABCMeta):
@@ -70,27 +51,37 @@ class ResultABC(abc.ABC):
 class GameABC(abc.ABC, metaclass=GameMeta):
     name: str
 
-    def __init__(self, title: str, score_cls: t.Type[ScoreABC]):
+    def __init__(self, title: str):
         self._title = title
-        self._score = score_cls()
 
     @property
     def title(self):
         return self._title
 
-    def step(self, message: Message, params: dict) -> ResultABC:
+    @abc.abstractmethod
+    def step(self, call: CallbackQuery, **kwargs) -> ResultABC:
         ...
 
     @abc.abstractmethod
-    def play(self, message: Message, **kwargs) -> ResultABC:
+    def play(self, call: CallbackQuery, **kwargs) -> ResultABC:
+        ...
+
+
+class AbstractGameRepo(abc.ABC):
+
+    @abc.abstractmethod
+    def get_games(self) -> list[GameABC]:
+        ...
+
+    @abc.abstractmethod
+    def get_game(self, name: str) -> GameABC:
         ...
 
 
 class GameHandlerABC(abc.ABC):
-    def __init__(self, bot: AsyncTeleBot, game: GameABC):
+    def __init__(self, bot: AsyncTeleBot, repo: AbstractGameRepo):
         self._bot = bot
-        self._game = game
-        self._data = {}
+        self._repo = repo
 
     @property
     def bot(self):

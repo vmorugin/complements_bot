@@ -1,7 +1,8 @@
 import json
 import random
+from collections import defaultdict
 
-from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 
 from domains.games.model import Result
 from domains.games.abstractions import GameABC
@@ -9,21 +10,22 @@ from domains.games.abstractions import GameABC
 
 class GuessTheNumberGame(GameABC):
     name = 'GuessTheNumber'
+    _score = defaultdict(int)
 
-    def play(self, message: Message, **kwargs):
-        self._score.increase(message.id)
-        tries = self._score.get(message.id)
+    def play(self, call: CallbackQuery, **kwargs):
+        self._score[call.message.id] += 1
+        tries = self._score.get(call.message.id)
         expected, real = kwargs.get('set'), kwargs.get('val')
         if expected < real:
             return Result(text='Не-а. Число поменьше')
         elif expected > real:
             return Result(text='Бери больше')
-        self._score.pop_key(message.id)
+        self._score.pop(call.message.id)
         return Result(text=f'[{self.title}]\nДа, это {real}!!!!! :з Хрю хрю хрю.\nС {tries} попытки!', result=True)
 
-    def step(self, message: Message, params: dict) -> Result:
+    def step(self, call: CallbackQuery, **kwargs) -> Result:
         rows = 8
-        keyboard = self._generate_keyboard(rows=rows, data=params)
+        keyboard = self._generate_keyboard(rows=rows, data=kwargs)
         return Result(text='Выбери число', reply_markup=InlineKeyboardMarkup(keyboard, row_width=rows))
 
     @staticmethod

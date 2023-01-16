@@ -1,6 +1,5 @@
 import asyncio
 from bot import bot
-from bot.middelwares import CallbackMiddleware
 from domains.games import GameHandler
 from repository.json_repo import JsonRepo
 from handlers.message import MessageHandler
@@ -11,7 +10,6 @@ def _setup_bot():
     repo = _setup_repo(JSON_DB_PATH.as_posix())
     _setup_handlers(repo)
     _setup_game_callbacks(repo)
-    _setup_middlewares()
 
 
 def _setup_repo(path: str):
@@ -25,17 +23,8 @@ def _setup_handlers(repo: JsonRepo):
 
 
 def _setup_game_callbacks(repo):
-    _setup_guess_the_number(repo)
-
-
-def _setup_guess_the_number(repo):
-    game = repo.get_game('GuessTheNumber')
-    handler = GameHandler(bot, game)
+    handler = GameHandler(bot, repo)
     bot.callback_query_handler(handler.filter)(handler.callback)
-
-
-def _setup_middlewares():
-    bot.setup_middleware(CallbackMiddleware())
 
 
 def run():

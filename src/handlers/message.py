@@ -3,7 +3,8 @@ import typing as t
 from telebot.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from telebot.async_telebot import AsyncTeleBot
 
-from repository.abstractions import AbstractComplementRepo, AbstractGameRepo
+from domains.complements.abstractions import AbstractComplementRepo
+from domains.games.abstractions import AbstractGameRepo
 
 
 class MessageHandler:

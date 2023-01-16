@@ -2,9 +2,6 @@ import abc
 import typing as t
 import json
 
-from domains.complements.model import Complement
-from domains.games.abstractions import GameABC
-
 
 class AbstractJsonRepo(abc.ABC):
 
@@ -23,21 +20,3 @@ class AbstractJsonRepo(abc.ABC):
     def _parse_json_to_dict(json_path) -> dict:
         with open(json_path, 'r') as file:
             return json.load(file)
-
-
-class AbstractComplementRepo(abc.ABC):
-
-    @abc.abstractmethod
-    def get_random_complement(self) -> Complement:
-        ...
-
-
-class AbstractGameRepo(abc.ABC):
-
-    @abc.abstractmethod
-    def get_games(self) -> list[GameABC]:
-        ...
-
-    @abc.abstractmethod
-    def get_game(self, name: str) -> GameABC:
-        ...

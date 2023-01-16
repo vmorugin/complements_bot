@@ -1,9 +1,10 @@
-from domains.complements.model import Complement
 import random
 
-from domains.games.model import Score
-from domains.games.abstractions import GameABC
-from repository.abstractions import AbstractJsonRepo, AbstractComplementRepo, AbstractGameRepo
+from repository.abstractions import AbstractJsonRepo
+from domains.games.abstractions import GameABC, AbstractGameRepo
+
+from domains.complements.model import Complement
+from domains.complements.abstractions import AbstractComplementRepo
 
 
 class JsonRepo(AbstractJsonRepo, AbstractComplementRepo, AbstractGameRepo):
@@ -35,4 +36,4 @@ class Converter:
 
     @classmethod
     def game_row_to_obj(cls, row: dict) -> GameABC:
-        return GameABC.make(name=row['name'], title=row['title'], score_cls=Score)
+        return GameABC.make(name=row['name'], title=row['title'])
