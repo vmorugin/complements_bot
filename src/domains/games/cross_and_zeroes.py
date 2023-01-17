@@ -1,6 +1,7 @@
 import json
 from collections import defaultdict
 from itertools import chain
+import typing as t
 
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 
@@ -36,30 +37,51 @@ class CrossAndZeroes(GameABC):
         return keyboard
 
     def play(self, call: CallbackQuery, **kwargs) -> ResultABC:
-        if self._last[call.message.chat.id] == self.X_CHAR:
-            self._last[call.message.chat.id] = self.O_CHAR
-        else:
-            self._last[call.message.chat.id] = self.X_CHAR
-        kwargs['chr'] = self._last[call.message.chat.id]
+        if not self._check_can_turn(call, kwargs):
+            return Result('Неверный ход')
+
+        kwargs['chr'] = self._switch_turn(call.message.chat.id)
         keyboard_markup = self._update_keyboard(call, data=kwargs)
         return self._get_end_result(keyboard_markup)
 
-    def _update_keyboard(self, call: CallbackQuery, data: dict) -> InlineKeyboardMarkup:
-        i, j = data.get('i'), data.get('j')
-        reply_markup = call.message.reply_markup
-        if reply_markup.keyboard[i][j].text == self.EMPTY_CHAR:
-            reply_markup.keyboard[i][j].text = data['chr']
+    def _switch_turn(self, key: int) -> str:
+        if self._last[key] == self.X_CHAR:
+            self._last[key] = self.O_CHAR
+        else:
+            self._last[key] = self.X_CHAR
 
-        return reply_markup
+        return self._last[key]
+
+    def _check_can_turn(self, call: CallbackQuery, data: dict) -> bool:
+        i, j = data.get('i'), data.get('j')
+        if call.message.reply_markup.keyboard[i][j].text != self.EMPTY_CHAR:
+            return False
+        return True
+
+    @staticmethod
+    def _update_keyboard(call: CallbackQuery, data: dict) -> InlineKeyboardMarkup:
+        i, j = data.get('i'), data.get('j')
+        call.message.reply_markup.keyboard[i][j].text = data['chr']
+
+        return call.message.reply_markup
 
     def _get_end_result(self, keyboard_markup: InlineKeyboardMarkup) -> ResultABC:
-        keyboard = keyboard_markup.keyboard
-        win_coord = ((0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6))
-        if self.EMPTY_CHAR not in list(map(lambda x: x.text, chain.from_iterable(keyboard_markup.keyboard))):
+        if win_chr := self._get_win_chr(keyboard_markup.keyboard):
+            return Result(text=f'[{self.title}]\nВыиграли {win_chr}', result=True)
+
+        elif self._check_is_draw(keyboard_markup.keyboard):
             return Result(text=f'[{self.title}]\nНичья', result=True)
+
+        return Result(text='Крестики-нолики', reply_markup=keyboard_markup, result=True)
+
+    def _get_win_chr(self, keyboard: list[list[InlineKeyboardButton]]) -> t.Optional[str]:
+        win_coord = ((0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6))
 
         for cord in win_coord:
             elems = [keyboard[col // 3][col % 3] for col in cord]
             if elems[0].text == elems[1].text and elems[1].text == elems[2].text and elems[0].text != self.EMPTY_CHAR:
-                return Result(text=f'[{self.title}]\nВыиграли {elems[0].text}', result=True)
-        return Result(text='Твой ход', reply_markup=keyboard_markup, result=True)
+                return elems[0].text
+
+    def _check_is_draw(self, keyboard: list[list[InlineKeyboardButton]]) -> bool:
+        if self.EMPTY_CHAR not in list(map(lambda x: x.text, chain.from_iterable(keyboard))):
+            return True

@@ -7,7 +7,7 @@ from domains.games.abstractions import GameHandlerABC, GameABC
 
 class GameHandler(GameHandlerABC):
 
-    def filter(self, call: CallbackQuery):
+    def filter(self, call: CallbackQuery) -> bool:
         data = self._get_dict_data(call)
         try:
             self._repo.get_game(data.get("name"))
