@@ -25,22 +25,21 @@ class GameHandler(GameHandlerABC):
     async def callback(self, call: CallbackQuery):
         data = self._get_dict_data(call)
         game = self._repo.get_game(data['name'])
-        can_play = data.get('set')
-        if not can_play:
-            return await self._prepare(game, call)
+        prepared = await self._prepare(game, call)
+        if not prepared:
+            return await self._send_chat_message(call, text=prepared.text, reply_markup=prepared.reply_markup)
 
-        return await self._play(game, call)
+        game_result = await self._play(game, call)
+        if not game_result:
+            return await self.bot.answer_callback_query(call.id, text=game_result.text)
+
+        return await self._send_chat_message(call, text=game_result.text, reply_markup=game_result.reply_markup)
 
     async def _prepare(self, game: GameABC, call: CallbackQuery):
-        result = game.step(call, **self._get_dict_data(call))
-        return await self._send_chat_message(call, text=result.text, reply_markup=result.reply_markup)
+        return game.step(call, **self._get_dict_data(call))
 
     async def _play(self, game: GameABC, call: CallbackQuery):
-        result = game.play(call, **self._get_dict_data(call))
-        if not result:
-            return await self.bot.answer_callback_query(call.id, text=result.text)
-
-        return await self._send_chat_message(call, text=result.text, reply_markup=result.reply_markup)
+        return game.play(call, **self._get_dict_data(call))
 
     async def _send_chat_message(self,
                                  call: CallbackQuery,

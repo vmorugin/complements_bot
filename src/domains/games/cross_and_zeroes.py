@@ -11,13 +11,16 @@ from domains.games.abstractions import GameABC, ResultABC
 
 class CrossAndZeroes(GameABC):
     name = 'CrossAndZeroes'
-    row_len = 3
+    ROW_LEN = 3
     X_CHAR = '[ X ]'
     O_CHAR = '[ O ]'
     EMPTY_CHAR = '[   ]'
     _last = defaultdict(str)
 
     def step(self, call: CallbackQuery, **kwargs) -> Result:
+        if kwargs.get('set'):
+            return Result(result=True)
+
         keyboard = self._generate_keyboard(data=kwargs)
         self._last[call.message.chat.id] = self.EMPTY_CHAR
         return Result(text='Крестики-нолики', reply_markup=InlineKeyboardMarkup(keyboard))
@@ -28,9 +31,9 @@ class CrossAndZeroes(GameABC):
             'set': True,
         })
         keyboard = []
-        for i in range(self.row_len):
+        for i in range(self.ROW_LEN):
             keyboard.append([])
-            for j in range(self.row_len):
+            for j in range(self.ROW_LEN):
                 callback_data['i'] = i
                 callback_data['j'] = j
                 keyboard[i].append(InlineKeyboardButton(text=self.EMPTY_CHAR, callback_data=json.dumps(callback_data)))

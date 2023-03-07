@@ -26,7 +26,7 @@ class GameMeta(abc.ABCMeta):
 
 
 class ResultABC(abc.ABC):
-    def __init__(self, text: str, result: bool = False, reply_markup: InlineKeyboardMarkup = None):
+    def __init__(self, text: str = None, result: bool = False, reply_markup: InlineKeyboardMarkup = None):
         self._result = result
         self._text = text
         self._reply_markup = reply_markup

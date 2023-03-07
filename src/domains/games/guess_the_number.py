@@ -24,6 +24,9 @@ class GuessTheNumberGame(GameABC):
         return Result(text=f'[{self.title}]\nДа, это {real}!!!!! :з Хрю хрю хрю.\nС {tries} попытки!', result=True)
 
     def step(self, call: CallbackQuery, **kwargs) -> Result:
+        if kwargs.get('set'):
+            return Result(result=True)
+
         rows = 8
         keyboard = self._generate_keyboard(rows=rows, data=kwargs)
         return Result(text='Выбери число', reply_markup=InlineKeyboardMarkup(keyboard, row_width=rows))
