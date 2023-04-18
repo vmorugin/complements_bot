@@ -3,12 +3,12 @@ import typing as t
 from telebot.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from telebot.async_telebot import AsyncTeleBot
 
-from domains.complements.abstractions import AbstractComplementRepo
-from domains.games.abstractions import AbstractGameRepo
+from domains.complements.abstractions import ComplementRepoABC
+from domains.games.abstractions import GameRepoABC
 
 
 class MessageHandler:
-    def __init__(self, bot: AsyncTeleBot, repo: t.Union[AbstractComplementRepo, AbstractGameRepo]):
+    def __init__(self, bot: AsyncTeleBot, repo: t.Union[ComplementRepoABC, GameRepoABC]):
         self.repo = repo
         self.bot = bot
 

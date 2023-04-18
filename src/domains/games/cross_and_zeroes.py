@@ -21,15 +21,13 @@ class CrossAndZeroes(GameABC):
         if kwargs.get('set'):
             return Result(result=True)
 
+        self._set_prepared(kwargs)
         keyboard = self._generate_keyboard(data=kwargs)
-        self._last[call.message.chat.id] = self.EMPTY_CHAR
+        self._last[str(call.message.chat.id)] = self.EMPTY_CHAR
         return Result(text='Крестики-нолики', reply_markup=InlineKeyboardMarkup(keyboard))
 
     def _generate_keyboard(self, data: dict) -> list[list[InlineKeyboardButton]]:
         callback_data = data.copy()
-        callback_data.update({
-            'set': True,
-        })
         keyboard = []
         for i in range(self.ROW_LEN):
             keyboard.append([])
@@ -43,23 +41,23 @@ class CrossAndZeroes(GameABC):
         if not self._check_can_turn(call, kwargs):
             return Result('Неверный ход')
 
-        kwargs['chr'] = self._switch_turn(call.message.chat.id)
+        kwargs['chr'] = self._switch_turn(str(call.message.chat.id))
         keyboard_markup = self._update_keyboard(call, data=kwargs)
         return self._get_end_result(keyboard_markup)
-
-    def _switch_turn(self, key: int) -> str:
-        if self._last[key] == self.X_CHAR:
-            self._last[key] = self.O_CHAR
-        else:
-            self._last[key] = self.X_CHAR
-
-        return self._last[key]
 
     def _check_can_turn(self, call: CallbackQuery, data: dict) -> bool:
         i, j = data.get('i'), data.get('j')
         if call.message.reply_markup.keyboard[i][j].text != self.EMPTY_CHAR:
             return False
         return True
+
+    def _switch_turn(self, key: str) -> str:
+        if self._last[key] == self.X_CHAR:
+            self._last[key] = self.O_CHAR
+        else:
+            self._last[key] = self.X_CHAR
+
+        return self._last[key]
 
     @staticmethod
     def _update_keyboard(call: CallbackQuery, data: dict) -> InlineKeyboardMarkup:

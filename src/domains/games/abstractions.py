@@ -66,8 +66,12 @@ class GameABC(abc.ABC, metaclass=GameMeta):
     def play(self, call: CallbackQuery, **kwargs) -> ResultABC:
         ...
 
+    @t.final
+    def _set_prepared(self, params: dict) -> None:
+        params['set'] = True
 
-class AbstractGameRepo(abc.ABC):
+
+class GameRepoABC(abc.ABC):
 
     @abc.abstractmethod
     def get_games(self) -> list[GameABC]:
@@ -79,7 +83,7 @@ class AbstractGameRepo(abc.ABC):
 
 
 class GameHandlerABC(abc.ABC):
-    def __init__(self, bot: AsyncTeleBot, repo: AbstractGameRepo):
+    def __init__(self, bot: AsyncTeleBot, repo: GameRepoABC):
         self._bot = bot
         self._repo = repo
 

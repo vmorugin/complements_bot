@@ -1,22 +1,26 @@
 import asyncio
+import typing as t
+
 from bot import bot
+from domains.complements.abstractions import ComplementRepoABC
 from domains.games import GameHandler
-from repository.json_repo import JsonRepo
+from domains.games.abstractions import GameRepoABC
 from handlers.message import MessageHandler
-from settings import JSON_DB_PATH
+from repository.sqlite_repo import SQLiteRepo
+from settings import SQLITE_PATH
 
 
 def _setup_bot():
-    repo = _setup_repo(JSON_DB_PATH.as_posix())
+    repo = _setup_repo(SQLITE_PATH.as_posix())
     _setup_handlers(repo)
     _setup_game_callbacks(repo)
 
 
 def _setup_repo(path: str):
-    return JsonRepo(path)
+    return SQLiteRepo(path)
 
 
-def _setup_handlers(repo: JsonRepo):
+def _setup_handlers(repo: t.Union[ComplementRepoABC, GameRepoABC]):
     handler = MessageHandler(bot, repo=repo)
     bot.message_handler(commands=['compliment'])(handler.send_compliment)
     bot.message_handler(commands=['play_game'])(handler.play_game)

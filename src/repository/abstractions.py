@@ -1,9 +1,10 @@
 import abc
 import typing as t
 import json
+from sqlite3 import Connection
 
 
-class AbstractJsonRepo(abc.ABC):
+class JsonRepoABC(abc.ABC):
 
     def __init__(self, json_path: str):
         self._path = json_path
@@ -20,3 +21,7 @@ class AbstractJsonRepo(abc.ABC):
     def _parse_json_to_dict(json_path) -> dict:
         with open(json_path, 'r') as file:
             return json.load(file)
+
+
+class SQLiteRepoABC:
+    _connection: Connection

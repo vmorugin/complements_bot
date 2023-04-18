@@ -1,13 +1,13 @@
 import random
 
-from repository.abstractions import AbstractJsonRepo
-from domains.games.abstractions import GameABC, AbstractGameRepo
+from repository.abstractions import JsonRepoABC
+from domains.games.abstractions import GameABC, GameRepoABC
 
 from domains.complements.model import Complement
-from domains.complements.abstractions import AbstractComplementRepo
+from domains.complements.abstractions import ComplementRepoABC
 
 
-class JsonRepo(AbstractJsonRepo, AbstractComplementRepo, AbstractGameRepo):
+class JsonRepo(JsonRepoABC, ComplementRepoABC, GameRepoABC):
 
     def get_games(self) -> list[GameABC]:
         games = self.base.get('games', [])
