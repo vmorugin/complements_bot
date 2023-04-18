@@ -26,7 +26,7 @@ def _setup_handlers(repo: t.Union[ComplementRepoABC, GameRepoABC]):
     bot.message_handler(commands=['play_game'])(handler.play_game)
 
 
-def _setup_game_callbacks(repo):
+def _setup_game_callbacks(repo: GameRepoABC):
     handler = GameHandler(bot, repo)
     bot.callback_query_handler(handler.filter)(handler.callback)
 

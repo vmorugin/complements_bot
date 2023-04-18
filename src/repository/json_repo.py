@@ -1,13 +1,28 @@
+import json
 import random
+import typing as t
 
-from repository.abstractions import JsonRepoABC
+from domains.complements.abstractions import ComplementRepoABC
+from domains.complements.model import Complement
 from domains.games.abstractions import GameABC, GameRepoABC
 
-from domains.complements.model import Complement
-from domains.complements.abstractions import ComplementRepoABC
 
+class JsonRepo(ComplementRepoABC, GameRepoABC):
+    def __init__(self, json_path: str):
+        self._path = json_path
+        self._base = None
 
-class JsonRepo(JsonRepoABC, ComplementRepoABC, GameRepoABC):
+    @property
+    def base(self) -> dict:
+        if self._base is None:
+            self._base = self._parse_json_to_dict(self._path)
+        return self._base
+
+    @staticmethod
+    @t.final
+    def _parse_json_to_dict(json_path) -> dict:
+        with open(json_path, 'r') as file:
+            return json.load(file)
 
     def get_games(self) -> list[GameABC]:
         games = self.base.get('games', [])
