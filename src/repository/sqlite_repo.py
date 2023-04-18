@@ -19,6 +19,8 @@ class SQLiteRepo(ComplementRepoABC, GameRepoABC):
     def get_game(self, name: str) -> GameABC:
         row = self._connection.execute(Statements.select_game_by_name, (name,))
         result = row.fetchone()
+        if result is None:
+            raise ValueError(f'Not found a game {name}')
         return Converter.make_game(*result)
 
     def get_random_complement(self) -> Complement:
