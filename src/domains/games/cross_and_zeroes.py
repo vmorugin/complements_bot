@@ -18,7 +18,7 @@ class CrossAndZeroes(GameABC):
     _last = defaultdict(str)
 
     def step(self, call: CallbackQuery, **kwargs) -> Result:
-        if kwargs.get('set'):
+        if self._check_prepared(kwargs):
             return Result(result=True)
 
         self._set_prepared(kwargs)

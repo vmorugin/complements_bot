@@ -67,8 +67,12 @@ class GameABC(abc.ABC, metaclass=GameMeta):
         ...
 
     @t.final
-    def _set_prepared(self, params: dict) -> None:
-        params['set'] = True
+    def _set_prepared(self, params: dict, value=True) -> None:
+        params['set'] = value
+
+    @t.final
+    def _check_prepared(self, params: dict) -> bool:
+        return bool(params.get('set'))
 
 
 class GameRepoABC(abc.ABC):
