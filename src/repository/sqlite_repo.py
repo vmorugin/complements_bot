@@ -25,7 +25,7 @@ class SQLiteRepo(ComplementRepoABC, GameRepoABC):
 
     def get_random_complement(self) -> Complement:
         total = self._get_count_complements()
-        random_id = random.choice(range(total))
+        random_id = random.choice(range(1, total + 1))
         row = self._connection.execute(Statements.select_complement_by_id, (random_id,))
         result = row.fetchone()
         return Converter.make_compliment(*result)
