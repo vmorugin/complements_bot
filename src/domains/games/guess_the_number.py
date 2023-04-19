@@ -21,7 +21,7 @@ class GuessTheNumberGame(GameABC):
         elif expected > real:
             return Result(text='Бери больше')
         self._score.pop(str(call.message.id))
-        return Result(text=f'[{self.title}]\nДа, это {real}!!!!! :з Хрю хрю хрю.\nС {tries} попытки!', result=True)
+        return Result(text=f'[{self.title}]\nДа, это {real}!!!!! :з \nС {tries} попытки!', result=True)
 
     def step(self, call: CallbackQuery, **kwargs) -> Result:
         if self._check_prepared(kwargs):
