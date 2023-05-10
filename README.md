@@ -55,7 +55,7 @@ Contributions are welcome! If you encounter any issues or have suggestions for i
 
 ## License
 
-This project is licensed under the [MIT License.](https://chat.openai.com/LICENSE)
+This project is licensed under the [MIT License.](https://choosealicense.com/licenses/mit/)
 
 Feel free to modify the content as needed and update any specific sections with additional information. Once you have made the necessary changes, you can save the file as `README.md` in the root directory of your GitHub project.
 
