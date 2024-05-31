@@ -86,3 +86,4 @@ class CrossAndZeroes(GameABC):
     def _check_is_draw(self, keyboard: list[list[InlineKeyboardButton]]) -> bool:
         if self.EMPTY_CHAR not in list(map(lambda x: x.text, chain.from_iterable(keyboard))):
             return True
+        return False

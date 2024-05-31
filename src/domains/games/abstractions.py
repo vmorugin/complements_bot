@@ -26,7 +26,7 @@ class GameMeta(abc.ABCMeta):
 
 
 class ResultABC(abc.ABC):
-    def __init__(self, text: str = None, result: bool = False, reply_markup: InlineKeyboardMarkup = None):
+    def __init__(self, text: t.Optional[str] = None, result: bool = False, reply_markup: t.Optional[InlineKeyboardMarkup] = None):
         self._result = result
         self._text = text
         self._reply_markup = reply_markup
@@ -36,11 +36,11 @@ class ResultABC(abc.ABC):
         return self._result
 
     @property
-    def text(self) -> str:
+    def text(self) -> t.Optional[str]:
         return self._text
 
     @property
-    def reply_markup(self) -> InlineKeyboardMarkup:
+    def reply_markup(self) -> t.Optional[InlineKeyboardMarkup]:
         return self._reply_markup
 
     @t.final

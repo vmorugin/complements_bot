@@ -15,7 +15,7 @@ class GuessTheNumberGame(GameABC):
     def play(self, call: CallbackQuery, **kwargs):
         self._score[str(call.message.id)] += 1
         tries = self._score.get(str(call.message.id))
-        expected, real = kwargs.get('set'), kwargs.get('val')
+        expected, real = kwargs['set'], kwargs.get('val')
         if expected < real:
             return Result(text='Не-а. Число поменьше')
         elif expected > real:
